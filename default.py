@@ -55,7 +55,8 @@ def Search(item):
     for subtitle in subtitles:
         url = "plugin://%s/?action=download&link=%s" % (__scriptid__,subtitle.link)
         listitem = xbmcgui.ListItem(label=subtitle.language,
-                            label2=subtitle.tvShowName + " - " +subtitle.text + " " + subtitle.season + "x" + subtitle.episode + " - " + subtitle.version
+                            label2=subtitle.tvShowName + " - " +subtitle.text + " " + subtitle.season + "x" + subtitle.episode + " - " + subtitle.version,
+                            thumbnailImage = subtitle.languageIcon
                             )
         xbmcplugin.addDirectoryItem(handle=int(
             sys.argv[1]), url=url, listitem=listitem, isFolder=False)

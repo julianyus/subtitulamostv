@@ -11,11 +11,12 @@ from bs4 import BeautifulSoup
 from Utilidades import log, normalizeString
 
 class Subtitle:
-	def __init__(self, tvShowName, season, episode, text, language, link, version):
+	def __init__(self, tvShowName, season, episode, text, language, languageIcon, link, version):
 		self.season = season
 		self.episode = episode
 		self.text = text
 		self.language = language
+		self.languageIcon = languageIcon
 		self.tvShowName = tvShowName
 		self.link = link
 		self.version = version
@@ -47,10 +48,25 @@ class Buscador:
 				for subtitle in subtitles:
 					version = subtitle.parent.find_previous_sibling("div", class_="version_name")
 					language = version.parent.find_previous_sibling("div", class_="subtitle_language")
-					foundSubtitles.append(Subtitle(tvShow['name'], season, episodeNumber, episode['name'], language.string, subtitle.get('href'), version.string ))
+					foundSubtitles.append(Subtitle(
+						tvShow['name'], 
+						season, 
+						episodeNumber, 
+						episode['name'], 
+						language.string, 
+						self.TranslateLanguageToIcon(language.string),
+						subtitle.get('href'), 
+						version.string ))
 		return foundSubtitles
 		
 	def DownloadSubtitle(self, url, path):
 		response = self.http.request('GET', self.urlRoot + url)
 		with open(path,'wb') as output:
 			output.write(response.data)
+
+	def TranslateLanguageToIcon(self, language):
+		if language == 'English':
+			return 'en'
+		if language == u'Español (España)':
+			return 'es'
+		return 'en'
