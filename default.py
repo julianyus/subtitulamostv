@@ -51,7 +51,11 @@ def get_params(string=""):
 def Search(item):
     buscador = Buscador()
     fileInfo = buscador.ParseFile(item['title'])
-    subtitles = buscador.GetMatchingSubtitles(fileInfo['title'],str(fileInfo["season"]), '{:02d}'.format(fileInfo['episode']))
+    if item['mansearch'] == False:
+        subtitles = buscador.GetMatchingSubtitles(fileInfo['title'],str(fileInfo["season"]), '{:02d}'.format(fileInfo['episode']))
+    else:
+        subtitles = buscador.GetMatchingSubtitles(item['mansearchstr'],str(fileInfo["season"]), '{:02d}'.format(fileInfo['episode']))
+
     for subtitle in subtitles:
         url = "plugin://%s/?action=download&link=%s" % (__scriptid__,subtitle.link)
         listitem = xbmcgui.ListItem(label=subtitle.language,
@@ -86,6 +90,9 @@ if params['action'] == 'search' or params['action'] == 'manualsearch':
 
     if item['title'] == "":
         item['title']  = xbmc.getInfoLabel("VideoPlayer.Title")
+    if 'searchstring' in params:
+        item['mansearch'] = True
+        item['mansearchstr'] = params['searchstring']
 
     Search(item)
 elif params['action'] == 'download':
