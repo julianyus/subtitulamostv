@@ -69,4 +69,12 @@ class Buscador:
 			return 'en'
 		if language == u'Español (España)':
 			return 'es'
+		if language == u'Français':
+			return 'fr'
+		if language == u'Español (Latinoamérica)':
+			return 'es'
+		if language == u'Galego':
+			return 'es'
+		if language == u'Català':
+			return 'es'
 		return 'en'
