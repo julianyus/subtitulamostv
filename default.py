@@ -50,12 +50,12 @@ def get_params(string=""):
 
 def Search(item):
     buscador = Buscador()
-    infoFichero = buscador.ParsearFichero(item['title'])
-    capitulos = buscador.ObtenerCapitulosCoincidentes(infoFichero['title'],str(infoFichero["season"]), '{:02d}'.format(infoFichero['episode']))
-    for capitulo in capitulos:
-        url = "plugin://%s/?action=download&link=%s" % (__scriptid__,capitulo.enlace)
-        listitem = xbmcgui.ListItem(label=capitulo.idioma,
-                            label2=capitulo.nombreSerie + " - " +capitulo.texto + " " + capitulo.temporada + "x" + capitulo.numero + " - " + capitulo.version
+    fileInfo = buscador.ParseFile(item['title'])
+    subtitles = buscador.GetMatchingSubtitles(fileInfo['title'],str(fileInfo["season"]), '{:02d}'.format(fileInfo['episode']))
+    for subtitle in subtitles:
+        url = "plugin://%s/?action=download&link=%s" % (__scriptid__,subtitle.link)
+        listitem = xbmcgui.ListItem(label=subtitle.language,
+                            label2=subtitle.tvShowName + " - " +subtitle.text + " " + subtitle.season + "x" + subtitle.episode + " - " + subtitle.version
                             )
         xbmcplugin.addDirectoryItem(handle=int(
             sys.argv[1]), url=url, listitem=listitem, isFolder=False)
@@ -90,7 +90,7 @@ if params['action'] == 'search' or params['action'] == 'manualsearch':
 elif params['action'] == 'download':
     buscador = Buscador()
     path =  os.path.join( __temp__, "%s.%s" %(str(uuid.uuid4()), "srt"))
-    buscador.DescargarCapitulo(params['link'], path)
+    buscador.DownloadSubtitle(params['link'], path)
     listitem = xbmcgui.ListItem(label=path)
     xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=path,listitem=listitem,isFolder=False)
 
